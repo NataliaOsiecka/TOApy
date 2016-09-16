@@ -42,7 +42,7 @@ def movie(filename, temperature0, rate, mode, function):
         ret, image = vidcap.read()
         #gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         #calculating temperature
-        time = number_of_frame /fps
+        time = number_of_frame * fps
         xt = float(rate)*time/60.0
         #cooling mode
         if (mode == 'c'):  
