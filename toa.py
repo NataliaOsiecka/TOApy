@@ -33,6 +33,11 @@ def main():
 def movie(filename, temperature0, rate, mode, function):
     vidcap = cv2.VideoCapture(filename)
     fps = float(vidcap.get(cv2.cv.CV_CAP_PROP_FPS))
+    print(fps)
+    total_frame = float(vidcap.get(cv2.cv.CV_CAP_PROP_FRAME_COUNT))
+    print(total_frame)
+    total_time = total_frame/fps
+    print(total_time)
     number_of_frame = 0
     toa = []
     temperature_data = []
@@ -42,17 +47,23 @@ def movie(filename, temperature0, rate, mode, function):
         ret, image = vidcap.read()
         #gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         #calculating temperature
-        time = number_of_frame * fps
+        #fps = float(vidcap.get(cv2.cv.CV_CAP_PROP_FPS))
+        #print(fps)
+        #time = float(vidcap.get(cv2.cv.CV_CAP_PROP_POS_MSEC)) *0.001
+        time = number_of_frame / fps
+        print(time)
         xt = float(rate)*time/60.0
+        print(xt)
         #cooling mode
         if (mode == 'c'):  
             temperature = float(temperature0)-xt
+            print(temperature)
         #heating mode
         if (mode == 'h'):
             temperature = float(temperature0)+xt
         #change the color to the gray scale
         x, y, z = image.shape
-        smal_image = image[0:int(x*0.2), 0:int(y*0.2)]
+        smal_image = image[0:int(x*0.25), 0:int(y*0.25)]
         median = cv2.medianBlur(smal_image, 5)
 
         #u, s, vh = scil.svd(median)
