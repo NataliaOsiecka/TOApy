@@ -32,12 +32,10 @@ def main():
 
 def movie(filename, temperature0, rate, mode, function):
     vidcap = cv2.VideoCapture(filename)
-    fps = float(vidcap.get(cv2.cv.CV_CAP_PROP_FPS))
-    print(fps)
-    total_frame = float(vidcap.get(cv2.cv.CV_CAP_PROP_FRAME_COUNT))
-    print(total_frame)
+    fps = float(vidcap.get(cv2.CAP_PROP_FPS))
+    total_frame = float(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
     total_time = total_frame/fps
-    print(total_time)
+    print('fps: ' + str(fps) + ' frames: ' + str(total_frame) + ' time: ' + str(total_time))
     number_of_frame = 0
     toa = []
     temperature_data = []
@@ -45,22 +43,22 @@ def movie(filename, temperature0, rate, mode, function):
     while vidcap.isOpened():
         number_of_frame += 1
         ret, image = vidcap.read()
-        #gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        #gray = cv2tColor(image, cv2.COLOR_BGR2GRAY)
         #calculating temperature
-        #fps = float(vidcap.get(cv2.cv.CV_CAP_PROP_FPS))
+        vid_fps = float(vidcap.get(cv2.CAP_PROP_FPS))
         #print(fps)
-        #time = float(vidcap.get(cv2.cv.CV_CAP_PROP_POS_MSEC)) *0.001
+        vid_time = float(vidcap.get(cv2.CAP_PROP_POS_MSEC)) *0.001
         time = number_of_frame / fps
-        print(time)
         xt = float(rate)*time/60.0
-        print(xt)
+        
         #cooling mode
         if (mode == 'c'):  
             temperature = float(temperature0)-xt
-            print(temperature)
         #heating mode
         if (mode == 'h'):
             temperature = float(temperature0)+xt
+            
+        print('time: {:3.3f} vid_time: {:3.3f} vid_fps: {:3.3f} xt: {:3.6f} temperature: {:3.6f}'.format(time, vid_time, vid_fps, xt, temperature))
         #change the color to the gray scale
         x, y, z = image.shape
         smal_image = image[0:int(x*0.25), 0:int(y*0.25)]
@@ -97,7 +95,7 @@ def rgb(image):
     return rgb
 
 def svd(image):
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    gray = cv2tColor(image, cv2.COLOR_BGR2GRAY)
     u, s, vh = scil.svd(gray)
     return s[0]
        
