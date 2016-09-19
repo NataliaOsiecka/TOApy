@@ -118,7 +118,7 @@ def plot_data_rgb(x,y):
     
 def export_to_csv(x,y):
     z = list(zip(x,y))
-    with open('toa_data.csv', 'wb') as f:
+    with open('toa_data.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         for item in z:
             writer.writerow(item)
