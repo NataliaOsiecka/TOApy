@@ -34,8 +34,6 @@ def movie(filename, temperature0, rate, mode, function):
     vidcap = cv2.VideoCapture(filename)
     fps = float(vidcap.get(cv2.CAP_PROP_FPS))
     total_frame = float(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
-    total_time = total_frame/fps
-    print('fps: ' + str(fps) + ' frames: ' + str(total_frame) + ' time: ' + str(total_time))
     number_of_frame = 0
     toa = []
     temperature_data = []
@@ -43,11 +41,7 @@ def movie(filename, temperature0, rate, mode, function):
     while vidcap.isOpened():
         number_of_frame += 1
         ret, image = vidcap.read()
-        #gray = cv2tColor(image, cv2.COLOR_BGR2GRAY)
         #calculating temperature
-        vid_fps = float(vidcap.get(cv2.CAP_PROP_FPS))
-        #print(fps)
-        vid_time = float(vidcap.get(cv2.CAP_PROP_POS_MSEC)) *0.001
         time = number_of_frame / fps
         xt = float(rate)*time/60.0
         
@@ -59,7 +53,7 @@ def movie(filename, temperature0, rate, mode, function):
             temperature = float(temperature0)+xt
             
         print('time: {:3.3f} temperature: {:3.3f}'.format(time, temperature))
-        
+                
         x, y, z = image.shape
         smal_image = image[0:int(x*0.25), 0:int(y*0.25)]
         median = cv2.medianBlur(smal_image, 5)
@@ -79,6 +73,10 @@ def movie(filename, temperature0, rate, mode, function):
             cv2.imwrite(img, image)
             print(img +' is saved')
         elif key == ord('q'):
+            vidcap.release()
+            return (temperature_data, toa)
+            
+        if total_frame == number_of_frame:
             vidcap.release()
             return (temperature_data, toa)
 
