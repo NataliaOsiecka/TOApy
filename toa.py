@@ -76,10 +76,15 @@ def movie(filename, temperature0, rate, mode, function):
             cv2.imwrite(img, image)
             print(img +' is saved')
         elif key == ord('q'):
+            print("The End!")
+            print('program stoped by the User')
+            print('Please, close movie window and plot window')
             vidcap.release()
             return (temperature_data, toa)
             
         if total_frame == number_of_frame:
+            print("The End!")
+            print('Please, close movie window and plot window')
             vidcap.release()
             return (temperature_data, toa)
 
