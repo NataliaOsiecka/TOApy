@@ -96,7 +96,7 @@ def rgb(image):
     return rgb
 
 def svd(image):
-    gray = cv2tColor(image, cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     u, s, vh = scil.svd(gray)
     return s[0]
        
