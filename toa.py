@@ -58,8 +58,8 @@ def movie(filename, temperature0, rate, mode, function):
         if (mode == 'h'):
             temperature = float(temperature0)+xt
             
-        print('time: {:3.3f} vid_time: {:3.3f} vid_fps: {:3.3f} xt: {:3.6f} temperature: {:3.6f}'.format(time, vid_time, vid_fps, xt, temperature))
-        #change the color to the gray scale
+        print('time: {:3.3f} temperature: {:3.3f}'.format(time, temperature))
+        
         x, y, z = image.shape
         smal_image = image[0:int(x*0.25), 0:int(y*0.25)]
         median = cv2.medianBlur(smal_image, 5)
@@ -70,7 +70,7 @@ def movie(filename, temperature0, rate, mode, function):
         
         #make svd analysis
         #show film and graph
-        cv2.imshow('frame', median)
+        cv2.imshow('frame', image)
         
         key = cv2.waitKey(1) & 0xFF 
         
