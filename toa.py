@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from decimal import *
+
 import csv
 import cv2
 import matplotlib.pyplot as plt
@@ -69,7 +71,8 @@ def movie(filename, temperature0, rate, mode, function):
         key = cv2.waitKey(1) & 0xFF 
         
         if key == ord('s'):
-            img = 'image' + str(int(temperature)) + '.png'
+            temp = round(temperature,2)
+            img = 'image' + str(temp) + '.png'
             cv2.imwrite(img, image)
             print(img +' is saved')
         elif key == ord('q'):
