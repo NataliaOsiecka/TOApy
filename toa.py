@@ -17,14 +17,14 @@ def main():
     mode = sys.argv[4]
     action = sys.argv[5]
     
-    if action == '--gray':
+    if action == '-gray':
         temperature, toa = movie(filename, temperature0, rate, mode, gray)
-    elif action == '--rgb':
+    elif action == '-rgb':
         temperature, toa = movie(filename, temperature0, rate, mode, rgb)
-    elif action == '--svd':
+    elif action == '-svd':
         temperature, toa = movie(filename, temperature0, rate, mode, svd)
         
-    if action == '--rgb': 
+    if action == '-rgb': 
         plot_data_rgb(temperature, toa)
     else:
         plot_data(temperature, toa)
