@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.linalg as scil
 import sys
+from time import clock
 
 def main():
     script = sys.argv[0]
@@ -16,7 +17,7 @@ def main():
     rate = sys.argv[3]
     mode = sys.argv[4]
     action = sys.argv[5]
-    
+
     if action == '-gray':
         temperature, toa = movie(filename, temperature0, rate, mode, gray)
     elif action == '-rgb':
@@ -24,10 +25,17 @@ def main():
     elif action == '-svd':
         temperature, toa = movie(filename, temperature0, rate, mode, svd)
         
-    if action == '-rgb': 
-        plot_data_rgb(temperature, toa)
+    if action == '-rgb':
+        norm_toa = normalize_rgb(toa)
+        plot_data_rgb(temperature, norm_toa)
+        #export_to_csv(temperature, norm_toa)
     else:
-        plot_data(temperature, toa)
+        if action == '-svd':
+            norm_toa = normalize_svd(toa)
+        else:
+            norm_toa = normalize(toa)
+        plot_data(temperature, norm_toa)
+        #export_to_csv(temperature, norm_toa)
         
     export_to_csv(temperature, toa)
 
@@ -41,6 +49,7 @@ def movie(filename, temperature0, rate, mode, function):
     temperature_data = []
     temperature = 0
     while vidcap.isOpened():
+        start_time = clock()
         number_of_frame += 1
         ret, image = vidcap.read()
         #calculating temperature
@@ -87,6 +96,8 @@ def movie(filename, temperature0, rate, mode, function):
             print('Please, close movie window and plot window')
             vidcap.release()
             return (temperature_data, toa)
+        
+        print("FPS {}".format(1/(clock() - start_time)))
 
 def gray(image):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -114,6 +125,24 @@ def plot_data(x,y):
     plt.grid()
     plt.show()
 
+def normalize(y):
+    data = np.array(y)
+    normalized_array = []
+    max_val = np.max(data[:,0])
+    print(data.shape)
+    min_val = np.min(data[:,0])
+    for item in data[:,0]:
+        norm = (item - min_val)/(max_val - min_val)
+        normalized_array.append(norm)
+    return normalized_array
+
+def normalize_svd(y):
+    max_val = np.max(y)
+    min_val = np.min(y)
+    norm = (y - min_val)/(max_val - min_val)
+    return(norm)
+
+
 def plot_data_rgb(x,y):
     data = np.array(y)
     plt.plot(x, data[:,0], 'b', x, data[:,1], 'g', x, data[:,2], 'r')
@@ -123,7 +152,22 @@ def plot_data_rgb(x,y):
     plt.yticks(fontsize = 14)
     plt.grid()
     plt.show()
-    
+
+def normalize_rgb(y):
+    data = np.array(y)
+    max_blue = np.max(data[:,0])
+    min_blue = np.min(data[:,0])
+    max_green = np.max(data[:,1])
+    min_green = np.min(data[:,1])
+    max_red = np.max(data[:,2])
+    min_red = np.min(data[:,2])
+    norm_blue = (data[:,0] - min_blue)/(max_blue - min_blue)
+    norm_green = (data[:,1] - min_green)/(max_green - min_green)
+    norm_red = (data[:,2] - min_red)/(max_red - min_red)
+    norm = list(zip(norm_blue, norm_green, norm_red))
+    return norm
+
+
 def export_to_csv(x,y):
     z = list(zip(x,y))
     with open('toa_data.csv', 'w', newline="") as f:
